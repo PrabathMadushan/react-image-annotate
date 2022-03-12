@@ -20,11 +20,16 @@ export default () => {
         >
           <Annotator
             {...(annotatorProps: any)}
+            onDelete={(data)=>{
+              console.log("onDelete", data);
+            }}
             onExit={(output) => {
               delete (output: any)["lastAction"]
+              console.log("onExit", output)
               changeLastOutput(output)
               changeAnnotatorOpen(false)
             }}
+            
           />
         </ErrorBoundaryDialog>
       ) : (

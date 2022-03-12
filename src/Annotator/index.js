@@ -38,6 +38,7 @@ type Props = {
   pointDistancePrecision?: number,
   RegionEditLabel?: Node,
   onExit: (MainLayoutState) => any,
+  onDelete?: (data) => any,
   videoTime?: number,
   videoSrc?: string,
   keyframes?: Object,
@@ -60,6 +61,7 @@ type Props = {
 export const Annotator = ({
   images,
   allowedArea,
+  onDelete,
   selectedImage = images && images.length > 0 ? 0 : undefined,
   showPointDistances,
   pointDistancePrecision,
@@ -153,6 +155,7 @@ export const Annotator = ({
     if (action.type === "HEADER_BUTTON_CLICKED") {
       if (["Exit", "Done", "Save", "Complete"].includes(action.buttonName)) {
         return onExit(without(state, "history"))
+        // console.log("action", action)
       } else if (action.buttonName === "Next" && onNextImage) {
         return onNextImage(without(state, "history"))
       } else if (action.buttonName === "Prev" && onPrevImage) {
@@ -189,6 +192,7 @@ export const Annotator = ({
         alwaysShowPrevButton={Boolean(onPrevImage)}
         state={state}
         dispatch={dispatch}
+        onDelete={onDelete}
         onRegionClassAdded={onRegionClassAdded}
         hideHeader={hideHeader}
         hideHeaderText={hideHeaderText}

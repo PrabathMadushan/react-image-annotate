@@ -62,11 +62,13 @@ type Props = {
   onRegionClassAdded: () => {},
   hideHeader?: boolean,
   hideHeaderText?: boolean,
+  onDelete: (data) => any,
 }
 
 export const MainLayout = ({
   state,
   dispatch,
+  onDelete,
   alwaysShowNextButton = false,
   alwaysShowPrevButton = false,
   RegionEditLabel,
@@ -170,7 +172,10 @@ export const MainLayout = ({
       onChangeRegion={action("CHANGE_REGION", "region")}
       onBeginRegionEdit={action("OPEN_REGION_EDITOR", "region")}
       onCloseRegionEdit={action("CLOSE_REGION_EDITOR", "region")}
-      onDeleteRegion={action("DELETE_REGION", "region")}
+      onDeleteRegion={(r) => {
+        onDelete(r)
+        action("DELETE_REGION", "region")(r)
+      }}
       onBeginBoxTransform={action("BEGIN_BOX_TRANSFORM", "box", "directions")}
       onBeginMovePolygonPoint={action(
         "BEGIN_MOVE_POLYGON_POINT",
@@ -380,7 +385,10 @@ export const MainLayout = ({
                 <RegionSelector
                   regions={activeImage ? activeImage.regions : emptyArr}
                   onSelectRegion={action("SELECT_REGION", "region")}
-                  onDeleteRegion={action("DELETE_REGION", "region")}
+                  onDeleteRegion={(r)=>{
+                    onDelete(r)
+                    action("DELETE_REGION", "region")(r)
+                  }}
                   onChangeRegion={action("CHANGE_REGION", "region")}
                 />,
                 state.keyframes && (
