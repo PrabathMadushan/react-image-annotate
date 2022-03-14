@@ -169,7 +169,10 @@ export const MainLayout = ({
       onMouseMove={action("MOUSE_MOVE")}
       onMouseDown={action("MOUSE_DOWN")}
       onMouseUp={action("MOUSE_UP")}
-      onChangeRegion={action("CHANGE_REGION", "region")}
+      onChangeRegion={(r)=>{
+        console.log("chnage:",r)
+        action("CHANGE_REGION", "region")(r)
+      }}
       onBeginRegionEdit={action("OPEN_REGION_EDITOR", "region")}
       onCloseRegionEdit={action("CLOSE_REGION_EDITOR", "region")}
       onDeleteRegion={(r) => {

@@ -7,7 +7,12 @@ import type {
   Mode,
   ToolEnum,
 } from "../MainLayout/types"
-import React, { useEffect, useReducer } from "react"
+import React, {
+  useEffect,
+  useReducer,
+  useImperativeHandle,
+  forwardRef,
+} from "react"
 import makeImmutable, { without } from "seamless-immutable"
 
 import type { KeypointsDefinition } from "../ImageCanvas/region-tools"
@@ -30,6 +35,7 @@ type Props = {
   imageTagList?: Array<string>,
   imageClsList?: Array<string>,
   enabledTools?: Array<string>,
+  onInit?:(state:any, dispatchToReducer:any) => void,
   selectedTool?: String,
   showTags?: boolean,
   selectedImage?: string | number,
@@ -58,153 +64,207 @@ type Props = {
   hideSave?: boolean,
 }
 
-export const Annotator = ({
-  images,
-  allowedArea,
-  onDelete,
-  selectedImage = images && images.length > 0 ? 0 : undefined,
-  showPointDistances,
-  pointDistancePrecision,
-  showTags = getFromLocalStorage("showTags", true),
-  enabledTools = [
-    "select",
-    "create-point",
-    "create-box",
-    "create-polygon",
-    "create-line",
-    "create-expanding-line",
-    "show-mask",
-  ],
-  selectedTool = "select",
-  regionTagList = [],
-  regionClsList = [],
-  imageTagList = [],
-  imageClsList = [],
-  keyframes = {},
-  taskDescription = "",
-  fullImageSegmentationMode = false,
-  RegionEditLabel,
-  videoSrc,
-  videoTime = 0,
-  videoName,
-  onExit,
-  onNextImage,
-  onPrevImage,
-  keypointDefinitions,
-  autoSegmentationOptions = { type: "autoseg" },
-  hideHeader,
-  hideHeaderText,
-  hideNext,
-  hidePrev,
-  hideClone,
-  hideSettings,
-  hideFullScreen,
-  hideSave,
-  allowComments,
-}: Props) => {
-  if (typeof selectedImage === "string") {
-    selectedImage = (images || []).findIndex((img) => img.src === selectedImage)
-    if (selectedImage === -1) selectedImage = undefined
-  }
-  const annotationType = images ? "image" : "video"
-  const [state, dispatchToReducer] = useReducer(
-    historyHandler(
-      combineReducers(
-        annotationType === "image" ? imageReducer : videoReducer,
-        generalReducer
-      )
-    ),
-    makeImmutable({
-      annotationType,
-      showTags,
+export const Annotator = 
+  (
+    {
+      images,
       allowedArea,
+      onDelete,
+      onInit,
+      selectedImage = images && images.length > 0 ? 0 : undefined,
       showPointDistances,
       pointDistancePrecision,
-      selectedTool,
-      fullImageSegmentationMode: fullImageSegmentationMode,
-      autoSegmentationOptions,
-      mode: null,
-      taskDescription,
-      showMask: true,
-      labelImages: imageClsList.length > 0 || imageTagList.length > 0,
-      regionClsList,
-      regionTagList,
-      imageClsList,
-      imageTagList,
-      currentVideoTime: videoTime,
-      enabledTools,
-      history: [],
+      showTags = getFromLocalStorage("showTags", true),
+      enabledTools = [
+        "select",
+        "create-point",
+        "create-box",
+        "create-polygon",
+        "create-line",
+        "create-expanding-line",
+        "show-mask",
+      ],
+      selectedTool = "select",
+      regionTagList = [],
+      regionClsList = [],
+      imageTagList = [],
+      imageClsList = [],
+      keyframes = {},
+      taskDescription = "",
+      fullImageSegmentationMode = false,
+      RegionEditLabel,
+      videoSrc,
+      videoTime = 0,
       videoName,
+      onExit,
+      onNextImage,
+      onPrevImage,
       keypointDefinitions,
+      autoSegmentationOptions = { type: "autoseg" },
+      hideHeader,
+      hideHeaderText,
+      hideNext,
+      hidePrev,
+      hideClone,
+      hideSettings,
+      hideFullScreen,
+      hideSave,
       allowComments,
-      ...(annotationType === "image"
-        ? {
-            selectedImage,
-            images,
-            selectedImageFrameTime:
-              images && images.length > 0 ? images[0].frameTime : undefined,
-          }
-        : {
-            videoSrc,
-            keyframes,
-          }),
-    })
-  )
-
-  const dispatch = useEventCallback((action: Action) => {
-    if (action.type === "HEADER_BUTTON_CLICKED") {
-      if (["Exit", "Done", "Save", "Complete"].includes(action.buttonName)) {
-        return onExit(without(state, "history"))
-        // console.log("action", action)
-      } else if (action.buttonName === "Next" && onNextImage) {
-        return onNextImage(without(state, "history"))
-      } else if (action.buttonName === "Prev" && onPrevImage) {
-        return onPrevImage(without(state, "history"))
-      }
+    }: Props
+  ) => {
+    if (typeof selectedImage === "string") {
+      selectedImage = (images || []).findIndex(
+        (img) => img.src === selectedImage
+      )
+      if (selectedImage === -1) selectedImage = undefined
     }
-    dispatchToReducer(action)
-  })
 
-  const onRegionClassAdded = useEventCallback((cls) => {
-    dispatchToReducer({
-      type: "ON_CLS_ADDED",
-      cls: cls,
+    const annotationType = images ? "image" : "video"
+    const [state, dispatchToReducer] = useReducer(
+      historyHandler(
+        combineReducers(
+          annotationType === "image" ? imageReducer : videoReducer,
+          generalReducer
+        )
+      ),
+      makeImmutable({
+        annotationType,
+        showTags,
+        allowedArea,
+        showPointDistances,
+        pointDistancePrecision,
+        selectedTool,
+        fullImageSegmentationMode: fullImageSegmentationMode,
+        autoSegmentationOptions,
+        mode: null,
+        taskDescription,
+        showMask: true,
+        labelImages: imageClsList.length > 0 || imageTagList.length > 0,
+        regionClsList,
+        regionTagList,
+        imageClsList,
+        imageTagList,
+        currentVideoTime: videoTime,
+        enabledTools,
+        history: [],
+        videoName,
+        keypointDefinitions,
+        allowComments,
+        ...(annotationType === "image"
+          ? {
+              selectedImage,
+              images,
+              selectedImageFrameTime:
+                images && images.length > 0 ? images[0].frameTime : undefined,
+            }
+          : {
+              videoSrc,
+              keyframes,
+            }),
+      })
+    )
+
+    const dispatch = useEventCallback((action: Action) => {
+      if (action.type === "HEADER_BUTTON_CLICKED") {
+        if (["Exit", "Done", "Save", "Complete"].includes(action.buttonName)) {
+          return onExit(without(state, "history"))
+          // console.log("action", action)
+        } else if (action.buttonName === "Next" && onNextImage) {
+          return onNextImage(without(state, "history"))
+        } else if (action.buttonName === "Prev" && onPrevImage) {
+          return onPrevImage(without(state, "history"))
+        }
+      }
+      dispatchToReducer(action)
     })
-  })
 
-  useEffect(() => {
-    if (selectedImage === undefined) return
-    dispatchToReducer({
-      type: "SELECT_IMAGE",
-      imageIndex: selectedImage,
-      image: state.images[selectedImage],
+    const onRegionClassAdded = useEventCallback((cls) => {
+      dispatchToReducer({
+        type: "ON_CLS_ADDED",
+        cls: cls,
+      })
     })
-  }, [selectedImage])
 
-  if (!images && !videoSrc)
-    return 'Missing required prop "images" or "videoSrc"'
+    useEffect(() => {
+      if (state && dispatchToReducer) onInit(state,dispatchToReducer);
 
-  return (
-    <SettingsProvider>
-      <MainLayout
-        RegionEditLabel={RegionEditLabel}
-        alwaysShowNextButton={Boolean(onNextImage)}
-        alwaysShowPrevButton={Boolean(onPrevImage)}
-        state={state}
-        dispatch={dispatch}
-        onDelete={onDelete}
-        onRegionClassAdded={onRegionClassAdded}
-        hideHeader={hideHeader}
-        hideHeaderText={hideHeaderText}
-        hideNext={hideNext}
-        hidePrev={hidePrev}
-        hideClone={hideClone}
-        hideSettings={hideSettings}
-        hideFullScreen={hideFullScreen}
-        hideSave={hideSave}
-      />
-    </SettingsProvider>
-  )
-}
+    }, [])
+
+    useEffect(() => {
+      if (selectedImage === undefined) return
+      dispatchToReducer({
+        type: "SELECT_IMAGE",
+        imageIndex: selectedImage,
+        image: state.images[selectedImage],
+      })
+    }, [selectedImage]) // state.images
+
+
+    // useImperativeHandle(ref, () => ({
+    //   addRegion() {
+    //     dispatchToReducer({
+    //       type: "ADD_REGION",
+    //       region: {
+    //         type: "box",
+    //         id: "20091109719847278",
+    //         color: "#ff0000",
+    //         cls: "test",
+    //         x: 0.22549019607843138,
+    //         y: 0.17509191176470587,
+    //         w: 0.2591911764705882,
+    //         h: 0.2892156862745098,
+    //         open: true,
+    //       },
+    //     })
+    //   },
+    // }))
+
+    if (!images && !videoSrc)
+      return 'Missing required prop "images" or "videoSrc"'
+
+    return (
+      <SettingsProvider>
+        <>
+          <button
+            onClick={() => {
+              dispatchToReducer({
+                type: "ADD_REGION",
+                region: {
+                  type: "box",
+                  id: "20091109719847278",
+                  color: "#ff0000",
+                  cls: "test",
+                  x: 0.22549019607843138,
+                  y: 0.17509191176470587,
+                  w: 0.2591911764705882,
+                  h: 0.2892156862745098,
+                  open: true,
+                },
+              })
+            }}
+          >
+            add region
+          </button>
+          <MainLayout
+            RegionEditLabel={RegionEditLabel}
+            alwaysShowNextButton={Boolean(onNextImage)}
+            alwaysShowPrevButton={Boolean(onPrevImage)}
+            state={state}
+            dispatch={dispatch}
+            onDelete={onDelete}
+            onRegionClassAdded={onRegionClassAdded}
+            hideHeader={hideHeader}
+            hideHeaderText={hideHeaderText}
+            hideNext={hideNext}
+            hidePrev={hidePrev}
+            hideClone={hideClone}
+            hideSettings={hideSettings}
+            hideFullScreen={hideFullScreen}
+            hideSave={hideSave}
+          />
+        </>
+      </SettingsProvider>
+    )
+  }
 
 export default Annotator

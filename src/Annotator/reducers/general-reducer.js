@@ -144,11 +144,23 @@ export default (state: MainLayoutState, action: Action) => {
       if (!isEqual(oldRegion.comment, action.region.comment)) {
         state = saveToHistory(state, "Change Region Comment")
       }
+      console.log("xxxx:", [...pathToActiveImage, "regions", regionIndex])
       return setIn(
         state,
         [...pathToActiveImage, "regions", regionIndex],
         action.region
       )
+    }
+    case "ADD_REGION": {
+      let newRegion = action.region
+      if (!newRegion) return state;
+      const regions = [
+        ...(getIn(state, pathToActiveImage).regions || []),
+      ].concat(newRegion ? [newRegion] : [])
+
+      return setIn(state, [...pathToActiveImage, "regions"], regions)
+
+      return state
     }
     case "CHANGE_IMAGE": {
       if (!activeImage) return state
