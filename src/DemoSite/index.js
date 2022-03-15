@@ -93,10 +93,10 @@ export default () => {
                 console.log("onDelete", data)
               }}
               onExit={(output) => {
-                delete (output: any)["lastAction"]
+                // delete (output: any)["lastAction"]
                 console.log("onExit", output)
-                changeLastOutput(output)
-                changeAnnotatorOpen(false)
+                // changeLastOutput(output)
+                // changeAnnotatorOpen(false)
               }}
             />
           </>

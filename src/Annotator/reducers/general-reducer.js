@@ -159,8 +159,6 @@ export default (state: MainLayoutState, action: Action) => {
       ].concat(newRegion ? [newRegion] : [])
 
       return setIn(state, [...pathToActiveImage, "regions"], regions)
-
-      return state
     }
     case "CHANGE_IMAGE": {
       if (!activeImage) return state

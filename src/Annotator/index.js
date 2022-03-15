@@ -4,17 +4,13 @@ import type {
   Action,
   Image,
   MainLayoutState,
-  Mode,
-  ToolEnum,
 } from "../MainLayout/types"
 import React, {
   useEffect,
   useReducer,
-  useImperativeHandle,
-  forwardRef,
 } from "react"
 import makeImmutable, { without } from "seamless-immutable"
-
+import getActiveImage from './reducers/get-active-image'
 import type { KeypointsDefinition } from "../ImageCanvas/region-tools"
 import MainLayout from "../MainLayout"
 import type { Node } from "react"
@@ -167,7 +163,8 @@ export const Annotator =
     const dispatch = useEventCallback((action: Action) => {
       if (action.type === "HEADER_BUTTON_CLICKED") {
         if (["Exit", "Done", "Save", "Complete"].includes(action.buttonName)) {
-          return onExit(without(state, "history"))
+          const { activeImage } = getActiveImage(state);
+          return onExit(without(activeImage, "history"))
           // console.log("action", action)
         } else if (action.buttonName === "Next" && onNextImage) {
           return onNextImage(without(state, "history"))
@@ -187,7 +184,6 @@ export const Annotator =
 
     useEffect(() => {
       if (state && dispatchToReducer) onInit(state,dispatchToReducer);
-
     }, [])
 
     useEffect(() => {
@@ -200,51 +196,11 @@ export const Annotator =
     }, [selectedImage]) // state.images
 
 
-    // useImperativeHandle(ref, () => ({
-    //   addRegion() {
-    //     dispatchToReducer({
-    //       type: "ADD_REGION",
-    //       region: {
-    //         type: "box",
-    //         id: "20091109719847278",
-    //         color: "#ff0000",
-    //         cls: "test",
-    //         x: 0.22549019607843138,
-    //         y: 0.17509191176470587,
-    //         w: 0.2591911764705882,
-    //         h: 0.2892156862745098,
-    //         open: true,
-    //       },
-    //     })
-    //   },
-    // }))
-
     if (!images && !videoSrc)
       return 'Missing required prop "images" or "videoSrc"'
 
     return (
       <SettingsProvider>
-        <>
-          <button
-            onClick={() => {
-              dispatchToReducer({
-                type: "ADD_REGION",
-                region: {
-                  type: "box",
-                  id: "20091109719847278",
-                  color: "#ff0000",
-                  cls: "test",
-                  x: 0.22549019607843138,
-                  y: 0.17509191176470587,
-                  w: 0.2591911764705882,
-                  h: 0.2892156862745098,
-                  open: true,
-                },
-              })
-            }}
-          >
-            add region
-          </button>
           <MainLayout
             RegionEditLabel={RegionEditLabel}
             alwaysShowNextButton={Boolean(onNextImage)}
@@ -262,7 +218,6 @@ export const Annotator =
             hideFullScreen={hideFullScreen}
             hideSave={hideSave}
           />
-        </>
       </SettingsProvider>
     )
   }
