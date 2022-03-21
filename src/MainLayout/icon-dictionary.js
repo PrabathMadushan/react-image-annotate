@@ -44,6 +44,12 @@ export const iconDictionary = {
   "create-point": () => (
     <FontAwesomeIcon style={faStyle} size="xs" fixedWidth icon={faCrosshairs} />
   ),
+  "create-pos-point": () => (
+    <FontAwesomeIcon style={{...faStyle,color:"red"}} size="xs" fixedWidth icon={faCrosshairs} />
+  ),
+  "create-neg-point": () => (
+    <FontAwesomeIcon style={{...faStyle,color:"blue"}} size="xs" fixedWidth icon={faCrosshairs} />
+  ),
   "create-box": () => (
     <FontAwesomeIcon
       style={faStyle}

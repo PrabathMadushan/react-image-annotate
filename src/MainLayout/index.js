@@ -320,6 +320,16 @@ export const MainLayout = ({
                   helperText: "Add Point" + getHotkeyHelpText("create_point"),
                 },
                 {
+                  name: "create-pos-point",
+                  helperText: "Add Positive Point" + getHotkeyHelpText("create_point"),
+                  alwaysShowing: true,
+                },
+                {
+                  name: "create-neg-point",
+                  helperText: "Add Positive Point" + getHotkeyHelpText("create_point"),
+                  alwaysShowing: true,
+                },
+                {
                   name: "create-box",
                   helperText:
                     "Add Bounding Box" +

@@ -144,16 +144,75 @@ export default (state: MainLayoutState, action: Action) => {
       if (!isEqual(oldRegion.comment, action.region.comment)) {
         state = saveToHistory(state, "Change Region Comment")
       }
-      console.log("xxxx:", [...pathToActiveImage, "regions", regionIndex])
       return setIn(
         state,
         [...pathToActiveImage, "regions", regionIndex],
         action.region
       )
     }
+
+    case "CHANGE_REGION_CLS": {
+      const regionIndex = getRegionIndex(action.region)
+      if (regionIndex === null) return state
+      const oldRegion = activeImage.regions[regionIndex]
+      if (oldRegion.cls !== action.region.cls) {
+        state = saveToHistory(state, "Change Region Classification")
+        const clsIndex = state.regionClsList.indexOf(action.region.cls)
+        if (clsIndex !== -1) {
+          state = setIn(state, ["selectedCls"], action.region.cls)
+          action.region.color = colors[clsIndex % colors.length]
+        }
+      }
+      if (!isEqual(oldRegion.tags, action.region.tags)) {
+        state = saveToHistory(state, "Change Region Tags")
+      }
+      if (!isEqual(oldRegion.comment, action.region.comment)) {
+        state = saveToHistory(state, "Change Region Comment")
+      }
+      return setIn(
+        state,
+        [...pathToActiveImage, "regions", regionIndex],
+        action.region
+      )
+    }
+
+    case "CHANGE_PRADICTION_REGION": {
+      const regionIndex = getRegionIndex(action.region)
+      if (regionIndex === null) {
+        let newRegion = action.region
+        if (!newRegion) return state
+        const regions = [
+          ...(getIn(state, pathToActiveImage).regions || []),
+        ].concat(newRegion ? [newRegion] : [])
+
+        return setIn(state, [...pathToActiveImage, "regions"], regions)
+      } else {
+        const oldRegion = activeImage.regions[regionIndex]
+        if (oldRegion.cls !== action.region.cls) {
+          state = saveToHistory(state, "Change Region Classification")
+          const clsIndex = state.regionClsList.indexOf(action.region.cls)
+          if (clsIndex !== -1) {
+            state = setIn(state, ["selectedCls"], action.region.cls)
+            action.region.color = colors[clsIndex % colors.length]
+          }
+        }
+        if (!isEqual(oldRegion.tags, action.region.tags)) {
+          state = saveToHistory(state, "Change Region Tags")
+        }
+        if (!isEqual(oldRegion.comment, action.region.comment)) {
+          state = saveToHistory(state, "Change Region Comment")
+        }
+        return setIn(
+          state,
+          [...pathToActiveImage, "regions", regionIndex],
+          action.region
+        )
+      }
+    }
+
     case "ADD_REGION": {
       let newRegion = action.region
-      if (!newRegion) return state;
+      if (!newRegion) return state
       const regions = [
         ...(getIn(state, pathToActiveImage).regions || []),
       ].concat(newRegion ? [newRegion] : [])
@@ -551,9 +610,37 @@ export default (state: MainLayoutState, action: Action) => {
             y,
             highlighted: true,
             editingLabels: true,
-            color: defaultRegionColor,
+            color: "#333",
             id: getRandomId(),
             cls: defaultRegionCls,
+          }
+          break
+        }
+        case "create-pos-point": {
+          state = saveToHistory(state, "Create Point")
+          newRegion = {
+            type: "point",
+            x,
+            y,
+            highlighted: true,
+            editingLabels: true,
+            color: "red",
+            id: getRandomId(),
+            cls: "Positive",
+          }
+          break
+        }
+        case "create-neg-point": {
+          state = saveToHistory(state, "Create Point")
+          newRegion = {
+            type: "point",
+            x,
+            y,
+            highlighted: true,
+            editingLabels: true,
+            color: "blue",
+            id: getRandomId(),
+            cls: "Negative",
           }
           break
         }
