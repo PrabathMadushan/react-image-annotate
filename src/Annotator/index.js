@@ -149,13 +149,11 @@ export const Annotator = ({
   )
 
   const dispatch = useEventCallback((action: Action) => {
+    console.log("dispatch", action)
     if (action.type === "HEADER_BUTTON_CLICKED") {
       if (["Exit", "Done", "Save", "Complete"].includes(action.buttonName)) {
-        // const { activeImage } = getActiveImage(state)
-        // return onExit(without(activeImage, "history"))
-        // console.log("action", action)
-      } else if (action.buttonName === "Predict" && onNextImage) {
-        console.log("predict clicked");
+        return onExit(without(state, "history"))
+      } else if (action.buttonName === "Predict") {
         const { activeImage } = getActiveImage(state)
         return onExit(without(activeImage, "history"))
       } else if (action.buttonName === "Next" && onNextImage) {
