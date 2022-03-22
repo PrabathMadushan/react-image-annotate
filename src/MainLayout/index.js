@@ -7,6 +7,9 @@ import { makeStyles } from "@mui/styles"
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 import { styled } from "@mui/material/styles"
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faBinoculars } from "@fortawesome/free-solid-svg-icons"
+
 import ClassSelectionMenu from "../ClassSelectionMenu"
 import DebugBox from "../DebugSidebarBox"
 import HistorySidebarBox from "../HistorySidebarBox"
@@ -167,10 +170,13 @@ export const MainLayout = ({
       }
       keypointDefinitions={state.keypointDefinitions}
       onMouseMove={action("MOUSE_MOVE")}
-      onMouseDown={action("MOUSE_DOWN")}
+      onMouseDown={(x,y)=>{
+        console.log("x,y:",x,y)
+        action("MOUSE_DOWN")({x,y})
+      }}
       onMouseUp={action("MOUSE_UP")}
-      onChangeRegion={(r)=>{
-        console.log("chnage:",r)
+      onChangeRegion={(r) => {
+        console.log("chnage:", r)
         action("CHANGE_REGION", "region")(r)
       }}
       onBeginRegionEdit={action("OPEN_REGION_EDITOR", "region")}
@@ -267,6 +273,17 @@ export const MainLayout = ({
                 ) : null,
               ].filter(Boolean)}
               headerItems={[
+                {
+                  name: "Predict",
+                  icon: (
+                    <FontAwesomeIcon
+                    style={{marginBottom:2}}
+                      size="xs"
+                      fixedWidth
+                      icon={faBinoculars}
+                    />
+                  ),
+                },
                 !hidePrev && { name: "Prev" },
                 !hideNext && { name: "Next" },
                 state.annotationType !== "video"
@@ -321,12 +338,14 @@ export const MainLayout = ({
                 },
                 {
                   name: "create-pos-point",
-                  helperText: "Add Positive Point" + getHotkeyHelpText("create_point"),
+                  helperText:
+                    "Add Positive Point" + getHotkeyHelpText("create_point"),
                   alwaysShowing: true,
                 },
                 {
-                  name: "create-neg-point",
-                  helperText: "Add Positive Point" + getHotkeyHelpText("create_point"),
+                  name: "create-object-corner-point",
+                  helperText:
+                    "Add Positive Point" + getHotkeyHelpText("create_point"),
                   alwaysShowing: true,
                 },
                 {
@@ -398,7 +417,7 @@ export const MainLayout = ({
                 <RegionSelector
                   regions={activeImage ? activeImage.regions : emptyArr}
                   onSelectRegion={action("SELECT_REGION", "region")}
-                  onDeleteRegion={(r)=>{
+                  onDeleteRegion={(r) => {
                     onDelete(r)
                     action("DELETE_REGION", "region")(r)
                   }}

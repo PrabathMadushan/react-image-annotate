@@ -515,7 +515,7 @@ export default (state: MainLayoutState, action: Action) => {
     }
     case "MOUSE_DOWN": {
       if (!activeImage) return state
-      const { x, y } = action
+      const { x, y } = action.x
 
       state = setIn(state, ["mouseDownAt"], { x, y })
 
@@ -618,29 +618,43 @@ export default (state: MainLayoutState, action: Action) => {
         }
         case "create-pos-point": {
           state = saveToHistory(state, "Create Point")
-          newRegion = {
-            type: "point",
-            x,
-            y,
-            highlighted: true,
-            editingLabels: true,
-            color: "red",
-            id: getRandomId(),
-            cls: "Positive",
-          }
+          newRegion = action.y
+            ? {
+                type: "point",
+                x,
+                y,
+                open: false,
+                highlighted: true,
+                editingLabels: false,
+                color: "red",
+                id: getRandomId(),
+                cls: "Positive",
+              }
+            : {
+                type: "point",
+                x,
+                y,
+                open: false,
+                highlighted: true,
+                editingLabels: false,
+                color: "blue",
+                id: getRandomId(),
+                cls: "Negative",
+              }
           break
         }
-        case "create-neg-point": {
+        case "create-object-corner-point": {
           state = saveToHistory(state, "Create Point")
           newRegion = {
             type: "point",
             x,
             y,
+            open: false,
             highlighted: true,
-            editingLabels: true,
-            color: "blue",
+            editingLabels: false,
+            color: "green",
             id: getRandomId(),
-            cls: "Negative",
+            cls: "Object Corner",
           }
           break
         }

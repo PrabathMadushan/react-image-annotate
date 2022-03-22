@@ -71,7 +71,6 @@ export default ({
     },
     onMouseDown: (e, specialEvent = {}) => {
       e.preventDefault()
-
       if (
         e.button === 1 ||
         e.button === 2 ||
@@ -96,7 +95,7 @@ export default ({
           // onResizeBox()
         }
         const { iw, ih } = layoutParams.current
-        onMouseDown({ x: projMouse.x / iw, y: projMouse.y / ih })
+        onMouseDown({ x: projMouse.x / iw, y: projMouse.y / ih },e.ctrlKey)
       }
     },
     onMouseUp: (e) => {

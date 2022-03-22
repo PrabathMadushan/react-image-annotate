@@ -21,7 +21,7 @@ import {
 import FullscreenIcon from "@mui/icons-material/Fullscreen"
 import AccessibilityNewIcon from "@mui/icons-material/AccessibilityNew"
 
-const faStyle = { marginTop: 4, width: 16, height: 16, marginBottom: 4 }
+export const faStyle = { marginTop: 4, width: 16, height: 16, marginBottom: 4 }
 
 export const iconDictionary = {
   select: () => (
@@ -41,14 +41,17 @@ export const iconDictionary = {
   "show-tags": () => (
     <FontAwesomeIcon style={faStyle} size="xs" fixedWidth icon={faTag} />
   ),
+  "show-tags": () => (
+    <FontAwesomeIcon style={faStyle} size="xs" fixedWidth icon={faTag} />
+  ),
   "create-point": () => (
     <FontAwesomeIcon style={faStyle} size="xs" fixedWidth icon={faCrosshairs} />
   ),
   "create-pos-point": () => (
     <FontAwesomeIcon style={{...faStyle,color:"red"}} size="xs" fixedWidth icon={faCrosshairs} />
   ),
-  "create-neg-point": () => (
-    <FontAwesomeIcon style={{...faStyle,color:"blue"}} size="xs" fixedWidth icon={faCrosshairs} />
+  "create-object-corner-point": () => (
+    <FontAwesomeIcon style={{...faStyle,color:"green"}} size="xs" fixedWidth icon={faCrosshairs} />
   ),
   "create-box": () => (
     <FontAwesomeIcon
