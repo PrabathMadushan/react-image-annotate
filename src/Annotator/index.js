@@ -33,6 +33,7 @@ type Props = {
   pointDistancePrecision?: number,
   RegionEditLabel?: Node,
   onExit: (MainLayoutState) => any,
+  onPredict:(data:any)=>any,
   onDelete?: (data) => any,
   videoTime?: number,
   videoSrc?: string,
@@ -77,6 +78,7 @@ export const Annotator = ({
   imageTagList = [],
   imageClsList = [],
   keyframes = {},
+  onPredict,
   taskDescription = "",
   fullImageSegmentationMode = false,
   RegionEditLabel,
@@ -155,7 +157,7 @@ export const Annotator = ({
         return onExit(without(state, "history"))
       } else if (action.buttonName === "Predict") {
         const { activeImage } = getActiveImage(state)
-        return onExit(without(activeImage, "history"))
+        return onPredict(without(activeImage, "history"))
       } else if (action.buttonName === "Next" && onNextImage) {
         return onNextImage(without(state, "history"))
       } else if (action.buttonName === "Prev" && onPrevImage) {

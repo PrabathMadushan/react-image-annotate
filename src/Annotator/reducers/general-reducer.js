@@ -628,7 +628,7 @@ export default (state: MainLayoutState, action: Action) => {
                 editingLabels: false,
                 color: "red",
                 id: getRandomId(),
-                cls: "Positive",
+                cls: "Negative",
               }
             : {
                 type: "point",
@@ -639,7 +639,7 @@ export default (state: MainLayoutState, action: Action) => {
                 editingLabels: false,
                 color: "blue",
                 id: getRandomId(),
-                cls: "Negative",
+                cls: "Positive",
               }
           break
         }

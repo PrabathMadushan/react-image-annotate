@@ -339,13 +339,13 @@ export const MainLayout = ({
                 {
                   name: "create-pos-point",
                   helperText:
-                    "Add Positive Point" + getHotkeyHelpText("create_point"),
+                    "Add Positive/Negative Point" + getHotkeyHelpText("create_point"),
                   alwaysShowing: true,
                 },
                 {
                   name: "create-object-corner-point",
                   helperText:
-                    "Add Positive Point" + getHotkeyHelpText("create_point"),
+                    "Add Object Corner" + getHotkeyHelpText("create_point"),
                   alwaysShowing: true,
                 },
                 {
