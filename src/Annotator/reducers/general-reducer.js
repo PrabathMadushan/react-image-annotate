@@ -626,7 +626,7 @@ export default (state: MainLayoutState, action: Action) => {
                 open: false,
                 highlighted: true,
                 editingLabels: false,
-                color: "red",
+                color: "rgb(244, 67, 54)",
                 id: getRandomId(),
                 cls: "Negative",
               }
@@ -637,7 +637,7 @@ export default (state: MainLayoutState, action: Action) => {
                 open: false,
                 highlighted: true,
                 editingLabels: false,
-                color: "blue",
+                color: "rgb(33, 150, 243)",
                 id: getRandomId(),
                 cls: "Positive",
               }
@@ -652,7 +652,7 @@ export default (state: MainLayoutState, action: Action) => {
             open: false,
             highlighted: true,
             editingLabels: false,
-            color: "green",
+            color: "rgb(76, 175, 80)",
             id: getRandomId(),
             cls: "Object Corner",
           }
@@ -732,7 +732,7 @@ export default (state: MainLayoutState, action: Action) => {
             y2: y,
             highlighted: true,
             editingLabels: false,
-            color: defaultRegionColor,
+            color: "rgb(239, 108, 0)",
             cls: "Measurement",
             id: getRandomId(),
           }

@@ -87,6 +87,7 @@ export default () => {
               hideSettings={true}
               labelImages={true}
               images={images}
+              regionClsList={["POSITIVE_CLASS","NEGATIVE_CLASS", "EXTREME_POINT", "MEASUREMENT_CLASS"]}
               ref={childRef}
               onInit={(state, dispatch) => {
                 console.log("dispatch",dispatch);
