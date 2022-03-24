@@ -733,7 +733,7 @@ export default (state: MainLayoutState, action: Action) => {
             highlighted: true,
             editingLabels: false,
             color: defaultRegionColor,
-            cls: defaultRegionCls,
+            cls: "Measurement",
             id: getRandomId(),
           }
           state = setIn(state, ["mode"], {

@@ -15,7 +15,6 @@ export default () => {
     // regionClsList: ["hotdog"],
     regionTagList: ["has-bun"],
     regionClsList: ["hotdog", "not-hotdog"],
-    enabledTools: ["select", "create-point", "create-box", "create-polygon"],
     allowComments: true,
   })
   const [images, setImages] = useState([
@@ -82,7 +81,11 @@ export default () => {
               add image
             </button>
             <Annotator
-              {...(annotatorProps: any)}
+              hidePrev={false}
+              hideNext={false}
+              hideClone={true}
+              hideSettings={true}
+              labelImages={true}
               images={images}
               ref={childRef}
               onInit={(state, dispatch) => {
