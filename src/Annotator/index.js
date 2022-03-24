@@ -32,7 +32,7 @@ type Props = {
   showPointDistances?: boolean,
   pointDistancePrecision?: number,
   RegionEditLabel?: Node,
-  onExit: (MainLayoutState) => any,
+  onExit: (data:sny) => any,
   onPredict:(data:any)=>any,
   onDelete?: (data) => any,
   videoTime?: number,
@@ -154,7 +154,8 @@ export const Annotator = ({
     console.log("dispatch", action)
     if (action.type === "HEADER_BUTTON_CLICKED") {
       if (["Exit", "Done", "Save", "Complete"].includes(action.buttonName)) {
-        return onExit(without(state, "history"))
+        const { activeImage } = getActiveImage(state)
+        return onExit(without(activeImage, "history"))
       } else if (action.buttonName === "Predict") {
         const { activeImage } = getActiveImage(state)
         return onPredict(without(activeImage, "history"))
